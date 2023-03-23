@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "9eacae9a-d0f9-4c2e-b761-a000402ba246",
+		"name": "EasyCore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26253348"
+	},
+	"item": [
+		{
+			"name": "GetAboutInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta */\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**Check the current version of Easy POC*/\r",
+							"pm.test(\"System version\", () => {\r",
+							"    pm.expect(jsonData.version).to.eql(\"4.32.25.19\")\r",
+							"});\r",
+							"\r",
+							"/**Check system name*/\r",
+							"pm.test(\"System name\", () => {\r",
+							"    pm.expect(jsonData.name).to.eql(\"EasyCore\")\r",
+							"});\r",
+							"/**Verifying the existence of properties in domainController*/\r",
+							"pm.test(\"Verifying the existence of properties in domainController\", function () {\r",
+							"    pm.expect(jsonData.domainController).to.have.all.keys('currentTime', 'currentTimeLocal');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/About/GetAboutInfo",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"About",
+						"GetAboutInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAirlines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"userName\", data.userName);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllAirline.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllAirline.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0 && data.codeGetAllAirline.toString() == \"0\") {\r",
+							"    pm.test(\"Verify that the service returns at least one airline\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.greaterThan(0);\r",
+							"    })\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/GetAllAirlines?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"GetAllAirlines"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAirlinesByIataCode",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"userName\", data.userName);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllAirline.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllAirline.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/GetAllAirlinesByIataCode?username={{userName}}&iataCode={{iataCode}}&apvCheck={{apvCheck}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"GetAllAirlinesByIataCode"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "iataCode",
+							"value": "{{iataCode}}"
+						},
+						{
+							"key": "apvCheck",
+							"value": "{{apvCheck}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

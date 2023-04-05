@@ -1,0 +1,2204 @@
+{
+	"info": {
+		"_postman_id": "9eacae9a-d0f9-4c2e-b761-a000402ba246",
+		"name": "EasyCore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26253348"
+	},
+	"item": [
+		{
+			"name": "GetAboutInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta */\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**Check the current version of Easy POC*/\r",
+							"pm.test(\"System version\", () => {\r",
+							"    pm.expect(jsonData.version).to.eql(\"4.32.25.19\")\r",
+							"});\r",
+							"\r",
+							"/**Check system name*/\r",
+							"pm.test(\"System name\", () => {\r",
+							"    pm.expect(jsonData.name).to.eql(\"EasyCore\")\r",
+							"});\r",
+							"/**Verifying the existence of properties in domainController*/\r",
+							"pm.test(\"Verifying the existence of properties in domainController\", function () {\r",
+							"    pm.expect(jsonData.domainController).to.have.all.keys('currentTime', 'currentTimeLocal');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/About/GetAboutInfo",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"About",
+						"GetAboutInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAirlines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"userName\", data.userName);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllAirline.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllAirline.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0 && data.codeGetAllAirline.toString() == \"0\") {\r",
+							"    pm.test(\"Verify that the service returns at least one airline\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.greaterThan(0);\r",
+							"    })\r",
+							"}\r",
+							"(!!data.nextGetAllAirlinesByIataCode) ? postman.setNextRequest(\"GetAllAirlinesByIataCode\") : postman.setNextRequest(null);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/GetAllAirlines?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"GetAllAirlines"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAirlinesByIataCode",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"userName\", data.userName);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllAirlineBIC.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllAirlineBIC.toString());\r",
+							"});\r",
+							"\r",
+							"if (data.iataCode === \"UU\") {\r",
+							"    pm.test(\"Verify that there are no airlines for that iataCode\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.eq(0);\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"Check that there are airlines for that iataCode\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.greaterThan(0);\r",
+							"    });\r",
+							"}\r",
+							"if (!!data.nextGetAirlines) {\r",
+							"    postman.setNextRequest(\"GetAirlineByIataCode\");\r",
+							"} else if (!!data.filtered) {\r",
+							"    postman.setNextRequest(\"FilterAirlines\")\r",
+							"} else if (!!data.nextGetAirportByNameISO) {\r",
+							"    postman.setNextRequest(\"GetAirportByNameISO\");\r",
+							"} else if (!!data.update) {\r",
+							"    ppostman.setNextRequest(\"UpdateAirport\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/GetAllAirlinesByIataCode?username={{userName}}&iataCode={{iataCode}}&apvCheck={{apvCheck}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"GetAllAirlinesByIataCode"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "iataCode",
+							"value": "{{iataCode}}"
+						},
+						{
+							"key": "apvCheck",
+							"value": "{{apvCheck}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAirlineByIataCode",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"iataCode\", data.iataCode);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAirlineBIC.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAirlineBIC.toString());\r",
+							"});\r",
+							"if (data.iataCode === \"UU\") {\r",
+							"    pm.test(\"Verify that there are no airlines for that iataCode\", () => {\r",
+							"        pm.expect(jsonData.data).to.eq(null);\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"Check that there is an airline for that iataCode\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.greaterThan(0);\r",
+							"    });\r",
+							"}\r",
+							"(!!data.filtered) ? postman.setNextRequest(\"FilterAirlines\") : postman.setNextRequest(\"GetAirportByNameISO\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/GetAirlineByIataCode/{{iataCode}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"GetAirlineByIataCode",
+						"{{iataCode}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FilterAirlines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeFilterAirlines.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageFilterAirlines.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0 && data.codeFilterAirlines == 0) {\r",
+							"\r",
+							"    /**Verifies that there is only one transaction for the filter applied*/\r",
+							"    pm.test(\"Verify that there are 35 airlines for the filter applied\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.eq(35);\r",
+							"    });\r",
+							"\r",
+							"    /**Verify that it has been filtered correctly*/\r",
+							"    pm.test(\"Verify that it has been filtered correctly\", () => {\r",
+							"        jsonData.data.map(element => {\r",
+							"            pm.expect(element.enrollAge).to.be.eq(18);\r",
+							"        })\r",
+							"    })\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"enrollAge\": 18\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airline/FilterAirlines?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airline",
+						"FilterAirlines"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAirports",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"if (pm.environment.get(\"insertedAirport\") === true || pm.environment.get(\"updatedAirport\") === true || pm.environment.get(\"deletedAirport\") === true) {\r",
+							"    if (pm.environment.get(\"insertedAirport\") === true) { \r",
+							"        pm.test(\"Verify that the airport has been inserted\", () => {\r",
+							"            inserted = jsonData.data.filter(element => element.id === pm.environment.get(\"airportId\"));\r",
+							"            pm.expect(inserted).to.not.eq(null);\r",
+							"        });\r",
+							"        pm.environment.set(\"insertedAirport\", false);\r",
+							"        if (!!data.update) {\r",
+							"            postman.setNextRequest(\"UpdateAirport\");\r",
+							"        } else if (!!data.insertCountry) {\r",
+							"            postman.setNextRequest(\"InsertCountry\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    } else if (pm.environment.get(\"updatedAirport\") === true) {\r",
+							"        pm.test(\"Verify that the airport has been update\", () => {\r",
+							"            updated = jsonData.data.filter(element => element.id === pm.environment.get(\"airportId\"));\r",
+							"            pm.expect(updated).to.not.eq(null);\r",
+							"        });\r",
+							"        pm.environment.set(\"updatedAirport\", false);\r",
+							"        if (!!data.delete) {\r",
+							"            postman.setNextRequest(\"DeleteAirport\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    } else if (pm.environment.get(\"deletedAirport\") === true) {\r",
+							"        pm.test(\"Verify that the airport has been deleted\", () => {\r",
+							"            deleted = jsonData.data.filter(element => element.id === pm.environment.get(\"airportId\"));\r",
+							"            pm.expect(deleted.length).eq(0);\r",
+							"        })\r",
+							"        pm.environment.set(\"deletedAirport\", false);\r",
+							"        /*if (!!data.getCountries) {\r",
+							"            postman.setNextRequest(\"GetCountries\");\r",
+							"        } else */if (!!data.insertCountry) {\r",
+							"            postman.setNextRequest(\"InsertCountry\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    }\r",
+							"} else {\r",
+							"    /**valid if the status code is 200*/\r",
+							"    pm.test(\"Status code is 200\", () => {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response code\", () => {\r",
+							"        pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllAirports.toString());\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response message\", () => {\r",
+							"        pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllAirports.toString());\r",
+							"    });\r",
+							"\r",
+							"    if (jsonData.code == 0 && data.codeGetAllAirports === \"0\") {\r",
+							"\r",
+							"        /**Verifies that there is only one transaction for the filter applied*/\r",
+							"        pm.test(\"Check that there are 2 airports\", () => {\r",
+							"            pm.expect(jsonData.data.length).to.be.eq(2);\r",
+							"        });\r",
+							"\r",
+							"        /**Verify that it has been filtered correctly*/\r",
+							"        pm.test(\"Check that it shows the appropriate airports\", () => {\r",
+							"            pm.expect(jsonData.data[0].id).to.be.eq(1);\r",
+							"            pm.expect(jsonData.data[0].name).to.be.eq(\"Montevideo\");\r",
+							"            pm.expect(jsonData.data[0].nameISO).to.be.eq(\"MVD\");\r",
+							"\r",
+							"            pm.expect(jsonData.data[1].id).to.be.eq(2);\r",
+							"            pm.expect(jsonData.data[1].name).to.be.eq(\"Punta del Este\");\r",
+							"            pm.expect(jsonData.data[1].nameISO).to.be.eq(\"PDP\");\r",
+							"        })\r",
+							"    }\r",
+							"\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airport/GetAllAirports?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airport",
+						"GetAllAirports"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAirportByNameISO",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetAirportISO.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetAirportISO.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0 && data.codeGetAirportISO == 0) {\r",
+							"    pm.test(\"Verify that it shows the airport associated with the iso code\", () => {\r",
+							"        switch (data.nameISO) {\r",
+							"            case \"PPP\":\r",
+							"                pm.expect(jsonData.data).to.be.eq(null);\r",
+							"                break;\r",
+							"            case \"MVD\":\r",
+							"                pm.expect(jsonData.data.name).to.be.eq(\"Montevideo\");\r",
+							"                break;\r",
+							"            case \"PDP\":\r",
+							"                pm.expect(jsonData.data.name).to.be.eq(\"Punta del Este\");\r",
+							"                break;\r",
+							"        }\r",
+							"    })\r",
+							"}\r",
+							"if (!!data.insert) {\r",
+							"    postman.setNextRequest(\"InsertAirport\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"} "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airport/GetAirportByNameISO?username={{userName}}&nameISO={{nameISO}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airport",
+						"GetAirportByNameISO"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "nameISO",
+							"value": "{{nameISO}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertAirport",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"nameA\", data.nameA);\r",
+							"pm.environment.set(\"nameISOA\", data.nameISOA);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeInsertAirport.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageInsertAirport.toString());\r",
+							"});\r",
+							"if (jsonData.code == 0) {\r",
+							"    pm.environment.set(\"airportId\", jsonData.data.id);\r",
+							"    if (data.userName === \"\" || data.userName === null) {\r",
+							"        postman.setNextRequest(\"UpdateAirport\");\r",
+							"    } else if (data.nameA === \"\" || data.nameISOA === \"\") {\r",
+							"        postman.setNextRequest(\"DeleteAirport\");\r",
+							"    } else if (data.codeInsertAirport === \"0\") {\r",
+							"        pm.environment.set(\"insertedAirport\", true);\r",
+							"        pm.test(\"Verifies that the airport was inserted\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(data.nameA);\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(data.nameISOA);\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetAllAirports\");\r",
+							"    }\r",
+							"} else if (!!data.update) {\r",
+							"    pm.environment.set(\"airportId\", 100);\r",
+							"    postman.setNextRequest(\"UpdateAirport\");\r",
+							"} else if (!!data.delete) {\r",
+							"    postman.setNextRequest(\"DeleteAirport\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"{{nameA}}\",\r\n  \"nameISO\": \"{{nameISOA}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airport/InsertAirport?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airport",
+						"InsertAirport"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateAirport",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeUpdateAirport.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageUpdateAirport.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0) {\r",
+							"    if (data.codeUpdateAirport !== \"0\") {\r",
+							"        postman.setNextRequest(\"DeleteAirport\");\r",
+							"    } else if (data.codeUpdateAirport === \"0\") {\r",
+							"        pm.environment.set(\"insertedAirport\", false);\r",
+							"        pm.environment.set(\"updatedAirport\", true);\r",
+							"        pm.test(\"Verify name and nameISO\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(\"Testing Update Airport\");\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(\"TUA\");\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetAllAirports\");\r",
+							"    }\r",
+							"} else {\r",
+							"    postman.setNextRequest(\"DeleteAirport\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{airportId}},\r\n  \"name\": \"Testing Update Airport\",\r\n  \"nameISO\": \"TUA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airport/UpdateAirport?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airport",
+						"UpdateAirport"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteAirport",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeDeleteAirport.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageDeleteAirport.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0) {\r",
+							"    if (data.userName === \"\" || data.userName === null || !!data.getCountries) {\r",
+							"        postman.setNextRequest(\"GetCountries\");\r",
+							"    } else if (data.codeInsertAirport !== \"0\") {\r",
+							"        postman.setNextRequest(\"InsertCountry\");\r",
+							"    } else if (data.codeDeleteAirport === \"0\") {\r",
+							"        pm.environment.set(\"insertedAirport\", false);\r",
+							"        pm.environment.set(\"updatedAirport\", false);\r",
+							"        pm.environment.set(\"deletedAirport\", true);\r",
+							"        pm.test(\"Verify name and nameISO\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(\"Testing Update Airport\");\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(\"TUA\");\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetAllAirports\");\r",
+							"    } else {\r",
+							"        postman.setNextRequest(null);\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Airport/DeleteAirport?username={{userName}}&airportId={{airportId}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Airport",
+						"DeleteAirport"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "airportId",
+							"value": "{{airportId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCountries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"if (pm.environment.get(\"insertedCountry\") === true || pm.environment.get(\"updatedCountry\") === true || pm.environment.get(\"deletedCountry\") === true) {\r",
+							"    if (pm.environment.get(\"insertedCountry\") === true) {\r",
+							"        pm.test(\"Verify that the country has been inserted\", () => {\r",
+							"            inserted = jsonData.data.filter(element => element.id === pm.environment.get(\"countryId\"));\r",
+							"            pm.expect(inserted).to.not.eq(null);\r",
+							"        });\r",
+							"        pm.environment.set(\"insertedCountry\", false);\r",
+							"        if (!!data.update) {\r",
+							"            postman.setNextRequest(\"UpdateCountry\");\r",
+							"        } else if (data.flightId === null) {\r",
+							"            postman.setNextRequest(\"GetFlightWithLogo\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    } else if (pm.environment.get(\"updatedCountry\") === true) {\r",
+							"        pm.test(\"Verify that the country has been update\", () => {\r",
+							"            updated = jsonData.data.filter(element => element.id === pm.environment.get(\"countryId\"));\r",
+							"            pm.expect(updated).to.not.eq(null);\r",
+							"        });\r",
+							"        pm.environment.set(\"updatedCountry\", false);\r",
+							"        if (!!data.delete) {\r",
+							"            postman.setNextRequest(\"DeleteCountry\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"\r",
+							"    } else if (pm.environment.get(\"deletedCountry\") === true) {\r",
+							"        pm.test(\"Verify that the country has been deleted\", () => {\r",
+							"            deleted = jsonData.data.filter(element => element.id === pm.environment.get(\"countryId\"));\r",
+							"            pm.expect(deleted.length).eq(0);\r",
+							"        })\r",
+							"        pm.environment.set(\"deletedCountry\", false);\r",
+							"        if (!!data.GetFlights) {\r",
+							"            postman.setNextRequest(\"GetFlights\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    }\r",
+							"} else {\r",
+							"    /**valid if the status code is 200*/\r",
+							"    pm.test(\"Status code is 200\", () => {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response code\", () => {\r",
+							"        pm.expect(jsonData.code.toString()).to.eq(data.codeGetCountries.toString());\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response message\", () => {\r",
+							"        pm.expect(jsonData.message.toString()).to.eq(data.messageGetCountries.toString());\r",
+							"    });\r",
+							"\r",
+							"    /**Verify that there is at least one country*/\r",
+							"    pm.test(\"Verify that there is at least one country\", () => {\r",
+							"        pm.expect(jsonData.data.length).to.be.greaterThan(1);\r",
+							"    });\r",
+							"\r",
+							"    (!!data.insertCountry) ? postman.setNextRequest(\"InsertCountry\") : postman.setNextRequest(null);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Country/GetCountries?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Country",
+						"GetCountries"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertCountry",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeInsertCountry.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageInsertCountry.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0) {\r",
+							"    pm.environment.set(\"countryId\", jsonData.data.id);\r",
+							"    if (data.userName === \"\" || data.userName === null) {\r",
+							"        postman.setNextRequest(\"UpdateCountry\");\r",
+							"    } else if (data.nameISOC === \"\" || data.nameC === \"\") {\r",
+							"        postman.setNextRequest(\"DeleteCountry\");\r",
+							"    } else if (data.codeInsertCountry === \"0\") {\r",
+							"        pm.environment.set(\"insertedCountry\", true);\r",
+							"        pm.test(\"Verifies that the country was inserted\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(data.nameC);\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(data.nameISOC);\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetCountries\");\r",
+							"    }\r",
+							"} else if (!!data.delete) {\r",
+							"    postman.setNextRequest(\"DeleteCountry\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"nameC\", data.nameC);\r",
+							"pm.environment.set(\"nameISOC\", data.nameISOC);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"{{nameC}}\",\r\n  \"nameISO\": \"{{nameISOC}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Country/InsertCountry?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Country",
+						"InsertCountry"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateCountry",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeUpdateCountry.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageUpdateCountry.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0) {\r",
+							"    if (data.codeUpdateCountry !== \"0\") {\r",
+							"        postman.setNextRequest(\"DeleteCountry\");\r",
+							"    } else if (data.codeUpdateCountry === \"0\") {\r",
+							"        pm.environment.set(\"updatedCountry\", true);\r",
+							"        pm.test(\"Verify name and nameISO\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(\"Testing Update Country\");\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(\"TUC\");\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetCountries\");\r",
+							"    }\r",
+							"} else {\r",
+							"    postman.setNextRequest(\"DeleteCountry\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{countryId}},\r\n  \"name\": \"Testing Update Country\",\r\n  \"nameISO\": \"TUC\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/Country/UpdateCountry?username={{userName}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Country",
+						"UpdateCountry"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteCountry",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeDeleteCountry.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageDeleteCountry.toString());\r",
+							"});\r",
+							"\r",
+							"if (jsonData.code == 0) {\r",
+							"    if (data.codeInsertCountry !== \"0\") {\r",
+							"        if (data.tokenName === \"\") {\r",
+							"            postman.setNextRequest(\"GetAllConfigurations\");\r",
+							"        } else if (data.tokenName === \"EasyWeb_SU\" || data.iataCode1 === \"\" || data.iataCode1 === \"AA\") {\r",
+							"            postman.setNextRequest(\"InsertAPV\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    } else if (data.codeDeleteCountry === \"0\") {\r",
+							"        pm.environment.set(\"deletedCountry\", true);\r",
+							"        pm.test(\"Verify name and nameISO\", () => {\r",
+							"            pm.expect(jsonData.data.name).to.be.eq(\"Testing Update Country\");\r",
+							"            pm.expect(jsonData.data.nameISO).to.be.eq(\"TUC\");\r",
+							"        })\r",
+							"        postman.setNextRequest(\"GetCountries\");\r",
+							"    }\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Country/DeleteCountry?username={{userName}}&countryId={{countryId}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Country",
+						"DeleteCountry"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "countryId",
+							"value": "{{countryId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllConfigurations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"if (pm.environment.get(\"insertedAPV\") === true || pm.environment.get(\"deletedAPV\") === true) {\r",
+							"    if (pm.environment.get(\"insertedAPV\") === true) {\r",
+							"        pm.test(\"Verify that the APV configuration has been added correctly\", () => {\r",
+							"            const configurationAPV = jsonData.data.filter(element => element.iataCode === data.iataCode1)\r",
+							"            pm.expect(configurationAPV).to.not.eq(null);\r",
+							"            console.log(\"data.index\", data.index)\r",
+							"            console.log(\"configurationAPV[0].id\", configurationAPV[0].id);\r",
+							"            pm.environment.set(\"idAPV\", configurationAPV[0].id);\r",
+							"        });\r",
+							"        pm.environment.set(\"insertedAPV\", false);\r",
+							"        if (data.next) {\r",
+							"            postman.setNextRequest(\"GetById\");\r",
+							"        } else if (!!data.GetFlights) {\r",
+							"            postman.setNextRequest(\"GetFlights\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    }\r",
+							"    else if (pm.environment.get(\"deletedAPV\") === true) {\r",
+							"        pm.test(\"Check that the APV configuration has been deleted correctly\", () => {\r",
+							"            const configurationAPV = jsonData.data.filter(element => { element.iataCode === data.iataCode });\r",
+							"            console.log(\"configurationAPV.length\", configurationAPV.length)\r",
+							"            pm.expect(configurationAPV.length).to.be.eq(0);\r",
+							"        });\r",
+							"        pm.environment.set(\"deletedAPV\", false);\r",
+							"        if (!!data.GetFlights) {\r",
+							"            postman.setNextRequest(\"GetFlights\")\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    }\r",
+							"} else {\r",
+							"\r",
+							"    /**valid if the status code is 200*/\r",
+							"    pm.test(\"Status code is 200\", () => {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response code\", () => {\r",
+							"        pm.expect(jsonData.code.toString()).to.eq(data.codeGetAllConfigurations.toString());\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response message\", () => {\r",
+							"        pm.expect(jsonData.message.toString()).to.eq(data.messageGetAllConfigurations.toString());\r",
+							"    });\r",
+							"\r",
+							"    if (jsonData.code == 0 && data.codeGetAllConfigurations === \"0\") {\r",
+							"\r",
+							"        /**Verifies that there is only one transaction for the filter applied*/\r",
+							"        pm.test(\"Check that there are 4 airlines\", () => {\r",
+							"            pm.expect(jsonData.data.length).to.be.eq(4);\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/APV/GetAllConfigurations",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"APV",
+						"GetAllConfigurations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertAPV",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeInsertAPV.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageInsertAPV.toString());\r",
+							"});\r",
+							"if (jsonData.code === 0) {\r",
+							"    if (data.codeInsertAPV === \"0\") {\r",
+							"        pm.environment.set(\"insertedAPV\", true);\r",
+							"    } else if (data.codeInsertAPV !== \"0\") {\r",
+							"        pm.environment.set(\"deletedAPV\", true);\r",
+							"    }\r",
+							"    postman.setNextRequest(\"GetAllConfigurations\");\r",
+							"} else if (!!data.delete) {\r",
+							"    postman.setNextRequest(\"DeleteAPV\");\r",
+							"} else if (!!data.GetFlights) {\r",
+							"    postman.setNextRequest(\"GetFlights\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"iataCode\": \"{{iataCode1}}\",\r\n  \"tokenName\": \"{{tokenName}}\",\r\n  \"enabled\": true,\r\n  \"mustBlockPassenger\": true,\r\n  \"timeout\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{easycore.url}}/api/APV/InsertAPV",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"APV",
+						"InsertAPV"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetById.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetById.toString());\r",
+							"});\r",
+							"if (jsonData.code === 0 && data.codeGetById === \"0\") {\r",
+							"\r",
+							"    pm.test(\"Verification of the existence of properties in data\", function () {\r",
+							"        pm.expect(jsonData.data).to.have.all.keys('id', 'airlineId', 'tokenId', 'enabled', 'mustBlockPassenger', 'timeout', 'createdAt', 'updatedAt');\r",
+							"    });\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/APV/GetById/{{idAPV}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"APV",
+						"GetById",
+						"{{idAPV}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteAPV",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeDeleteAPV.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageDeleteAPV.toString());\r",
+							"});\r",
+							"if (jsonData.code === 0) {\r",
+							"    if (data.codeInsertAPV !== \"0\") {\r",
+							"        if (data.flightId === \"\") {\r",
+							"            postman.setNextRequest(\"GetFlightWithLogo\");\r",
+							"        } else {\r",
+							"            postman.setNextRequest(null);\r",
+							"        }\r",
+							"    }\r",
+							"    else if (data.codeDeleteAPV === \"0\") {\r",
+							"        pm.environment.set(\"deletedAPV\", true);\r",
+							"        postman.setNextRequest(\"GetAllConfigurations\");\r",
+							"    }\r",
+							"} else {\r",
+							"    postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/APV/DeleteAPV/{{idAPV}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"APV",
+						"DeleteAPV",
+						"{{idAPV}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlights",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"if (data.userName === \"\" || data.userName === null || data.terminalId === null || data.terminalId === \"\") {\r",
+							"    /**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response code\", () => {\r",
+							"        pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlights.toString());\r",
+							"    });\r",
+							"\r",
+							"    /**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"    pm.test(\"Checking response message\", () => {\r",
+							"        pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlights.toString());\r",
+							"    });\r",
+							"} else {\r",
+							"    const flights = jsonData.length;\r",
+							"    if (flights > 0) {\r",
+							"        pm.environment.set(\"idFlight\", jsonData[0].id);\r",
+							"        pm.test(\"verifies that only flights departing from MVD airport are shown\", () => {\r",
+							"            pm.expect(jsonData.filter(element => element.arpt == \"MVD\").length).to.be.eq(flights);\r",
+							"            pm.expect(jsonData.filter(element => element.moveType == \"D\").length).to.be.eq(flights);\r",
+							"        });\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Flight/GetFlights?userName={{userName}}&terminalId={{terminalId}}&airportNameISO={{airportNameISO}}&moveType={{moveType}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlights"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "terminalId",
+							"value": "{{terminalId}}"
+						},
+						{
+							"key": "airportNameISO",
+							"value": "{{airportNameISO}}"
+						},
+						{
+							"key": "moveType",
+							"value": "{{moveType}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlightsPocEnabled",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlightsPocEnabled.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlightsPocEnabled.toString());\r",
+							"});\r",
+							"\r",
+							"const flights = jsonData.data.length;\r",
+							"if (flights > 0) {\r",
+							"    pm.test(\"verifies that only flights departing from MVD airport are shown\", () => {\r",
+							"        pm.expect(jsonData.data.filter(element => element.arpt == \"MVD\").length).to.be.eq(flights);\r",
+							"        pm.expect(jsonData.data.filter(element => element.moveType == \"D\").length).to.be.eq(flights);\r",
+							"    });\r",
+							"}\r",
+							"if (!!data.GetFlightsForEasyDNM) {\r",
+							"    postman.setNextRequest(\"GetFlightsForEasyDNM\");\r",
+							"} else {\r",
+							"    postman.setNextRequest(\"GetFlightWithLogo\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://easycore.stg.aic.carrasco.aero/api/Flight/GetFlightsPocEnabled?userName={{userName}}&terminalId={{terminalId}}",
+					"protocol": "https",
+					"host": [
+						"easycore",
+						"stg",
+						"aic",
+						"carrasco",
+						"aero"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlightsPocEnabled"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "terminalId",
+							"value": "{{terminalId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlightsForEasyDNM",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/**validate that the response code is the one I am waiting for in the js for the current iteration*/\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlightsForEasyDNM.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlightsForEasyDNM.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://easycore.stg.aic.carrasco.aero/api/Flight/GetFlightsForEasyDNM?userName={{userName}}",
+					"protocol": "https",
+					"host": [
+						"easycore",
+						"stg",
+						"aic",
+						"carrasco",
+						"aero"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlightsForEasyDNM"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlightWithLogo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlightWithLogo.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlightWithLogo.toString());\r",
+							"});\r",
+							"if (data.terminalId !== \"1\") {\r",
+							"    if (data.iataCode1 === \"\" || !!data.validIataCode) {\r",
+							"        postman.setNextRequest(\"GetFlightName\");\r",
+							"    } else {\r",
+							"        postman.setNextRequest(null);\r",
+							"    }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{easycore.url}}/api/Flight/GetFlightWithLogo?userName={{userName}}&terminalId={{terminalId}}&flightId={{flightId}}&airportNameISO={{airportNameISO}}",
+					"host": [
+						"{{easycore.url}}"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlightWithLogo"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "terminalId",
+							"value": "{{terminalId}}"
+						},
+						{
+							"key": "flightId",
+							"value": "{{flightId}}"
+						},
+						{
+							"key": "airportNameISO",
+							"value": "{{airportNameISO}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlight",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlight.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlight.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://easycore.stg.aic.carrasco.aero/api/Flight/GetFlight?userName={{userName}}&flightId={{flightId}}",
+					"protocol": "https",
+					"host": [
+						"easycore",
+						"stg",
+						"aic",
+						"carrasco",
+						"aero"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlight"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "flightId",
+							"value": "{{flightId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFlightName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/**I store the answer in JsonDta*/\r",
+							"let jsonData = pm.response.json();\r",
+							"console.log(\"jsonData\", jsonData);\r",
+							"\r",
+							"/**valid if the status code is 200*/\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Checking response code\", () => {\r",
+							"    pm.expect(jsonData.code.toString()).to.eq(data.codeGetFlightName.toString());\r",
+							"});\r",
+							"\r",
+							"/**validate that the response message is the one I am expecting in the js for the current iteration*/\r",
+							"pm.test(\"Checking response message\", () => {\r",
+							"    pm.expect(jsonData.message.toString()).to.eq(data.messageGetFlightName.toString());\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"if (!!data.validstdaJul) {\r",
+							"    pm.environment.set(\"stdaJulOptionalParam\", data.stdaJulOptionalParam);\r",
+							"} else {\r",
+							"    const now = Date.now();\r",
+							"    const startOfYear = new Date(new Date().getFullYear(), 0, 1);\r",
+							"    const julianDay = Math.ceil((now - startOfYear) / 86400000);\r",
+							"    pm.environment.set(\"stdaJulOptionalParam\", julianDay);\r",
+							"}\r",
+							"console.log(\"stdaJulOptionalParam\", pm.environment.get(\"stdaJulOptionalParam\"));\r",
+							"if (!!data.validIataCode) {\r",
+							"    pm.request.url.query.idx(1).value = data.iataCode;\r",
+							"    console.log(\"pm.request.url.query.idx(1).value\", pm.request.url.query.idx(1).value);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{easycore.token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://easycore.stg.aic.carrasco.aero/api/Flight/GetFlightName?userName={{userName}}&iataCode={{iataCode1}}&flightNumber={{flightNumber}}&stdaJul={{stdaJulOptionalParam}}&runwayId={{runwayId}}",
+					"protocol": "https",
+					"host": [
+						"easycore",
+						"stg",
+						"aic",
+						"carrasco",
+						"aero"
+					],
+					"path": [
+						"api",
+						"Flight",
+						"GetFlightName"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "{{userName}}"
+						},
+						{
+							"key": "iataCode",
+							"value": "{{iataCode1}}"
+						},
+						{
+							"key": "flightNumber",
+							"value": "{{flightNumber}}"
+						},
+						{
+							"key": "stdaJul",
+							"value": "{{stdaJulOptionalParam}}"
+						},
+						{
+							"key": "runwayId",
+							"value": "{{runwayId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
